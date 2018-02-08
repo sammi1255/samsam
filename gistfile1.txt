@@ -1,0 +1,67 @@
+// ==UserScript==
+// @name lisar
+// @namespace Violentmonkey Scripts
+// @match https://discordapp.com/*
+// @grant none
+// @run-at document-end
+// ==/UserScript==
+// 
+var dname = 'Deleted User 68e2c24a';
+var name = 'Lisa R';
+var e = document.getElementsByClassName('user-name');
+var m = document.getElementsByClassName('mention');
+var z = document.getElementsByTagName('a');
+var a = [
+  e,
+  m,
+  z
+];
+var o = new MutationObserver(function (mr, mo) {
+  mo.disconnect();
+  var i,
+  j;
+  for (j = 0; j < a.length; j++) {
+    for (i = 0; i < a[j].length; i++) {
+      if (a[j][i].textContent == dname) {
+        a[j][i].textContent = name;
+      } else if (a[j][i].textContent == '@' + dname) {
+        a[j][i].textContent = '@' + name;
+      }
+    }
+  }
+  mo.observe(document.querySelector('.content'), {
+    childList: true,
+    subtree: true
+  });
+}
+);
+var k = new MutationObserver(function (mr, mo) {
+  var gg = mr;
+  mo.disconnect();
+  var zzz = document.querySelector('.tooltip');
+  if (zzz) {
+    zzz.textContent = zzz.textContent.replace(dname, name);
+  }
+  mo.observe(document.querySelector('.tooltips'), {
+    childList: true,
+    subtree: true
+  });
+});
+var p = new MutationObserver(function (mr, mo) {
+  if (document.querySelector('.content')) {
+    console.log(document.querySelector('.content'));
+    mo.disconnect();
+    o.observe(document.querySelector('.content'), {
+      childList: true,
+      subtree: true
+    });
+    k.observe(document.querySelector('.tooltips'), {
+      childList: true,
+      subtree: true
+    });
+  }
+});
+p.observe(document.body, {
+  childList: true,
+  subtree: true
+});
